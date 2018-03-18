@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width = device-width, initial-scale=1" />
+    <title>My Weather</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .m5 {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .m0-h {
+            margin-left: 0px;
+            margin-right: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>MyWeather</h1>
+        </div>
+        <div class="jumbotron">
+            <h3>Best Weather Forecasting Website Ever!!</h3>
+            <p>MyWeather provides you with the most down-to-earth &amp; accurate weather forecasting in every hour.</p>
+        </div>
+
+        <div class="row m5">
+            <div class="col-sm-12">
+                <form action="#" th:action="@{${'/myweather/home'}(page=${curPage}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale}, size=${size})}" th:object="${queryModel}"  method="get">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-row align-items-center">
+                            <div class="col-auto my-1">
+                                <input name="location" type="text" class="form-control" id="location" placeholder="Locations..." th:field="*{location}"/>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select name="sortedBy" class="custom-select mr-sm-2" id="sortedBy" th:field="*{sortedBy}">
+                                    <option th:selected="${sortedBy}==''" value="">Sort by...</option>
+                                    <option th:selected="${sortedBy == option.key}" th:each="option : ${queryModel.sortByOptions}" th:text="${option.value}" th:value="${option.key}">$OPTION</option>
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select name="sortDir" class="custom-select mr-sm-2" id="sortDir" th:field="*{sortDir}">
+                                    <option th:value="asc">Ascending</option>
+                                    <option th:value="desc">Descending</option>
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <select name="scale" class="custom-select mr-sm-2" id="scale" th:field="*{scale}">
+                                    <option th:value="metric">Metric</option>
+                                    <option th:value="imperial">Imperial</option>
+                                </select>
+                            </div>
+                            <div class="col-auto my-1">
+                                <input name="size" type="number" class="form-control" id="sizeInAPage" placeholder="Item per page" th:field="*{size}"/>
+                            </div>
+
+                            <div class="col-auto my-1">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="row m0-h">
+            <div class="col-lg-5 m0-h">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{${'/myweather/home'}(page=1, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}" aria-label="First">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">First</span>
+                            </a>
+                        </li>
+                        <li th:if="${curPage-4 &gt; 0}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage-4}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage-4}"></span></a></li>
+                        <li th:if="${curPage-3 &gt; 0}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage-3}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage-3}"></span></a></li>
+                        <li th:if="${curPage-2 &gt; 0}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage-2}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage-2}"></span></a></li>
+                        <li th:if="${curPage-1 &gt; 0}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage-1}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage-1}"></span></a></li>
+                        <li class="page-item active"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage}, size=${size})}"><span th:text="${curPage}"></span></a></li>
+                        <li th:if="${curPage+1 &lt;= maxPage}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage+1}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage+1}"></span></a></li>
+                        <li th:if="${curPage+2 &lt;= maxPage}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage+2}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage+2}"></span></a></li>
+                        <li th:if="${curPage+3 &lt;= maxPage}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage+3}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage+3}"></span></a></li>
+                        <li th:if="${curPage+4 &lt;= maxPage}" class="page-item"><a class="page-link" th:href="@{${'/myweather/home'}(page=${curPage+4}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}"><span th:text="${curPage+4}"></span></a></li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{${'/myweather/home'}(page=${maxPage}, size=${size}, location=${queryModel.location}, sortedBy=${queryModel.sortedBy}, sortDir=${queryModel.sortDir}, scale=${queryModel.scale})}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Last</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="content-choices" role="tablist">
+            <li class="nav-item">
+                <a id="hourly-tab" class="nav-link active" role="tab" data-toggle="tab" aria-controls="hourly" aria-selected="true" href="#hourly">Hourly</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="content">
+            <div class="tab-pane fade show active" id="hourly" role="tabpanel" aria-labelledby="hourly-tab">
+                <table id="hourly-table" class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Date &amp; Time</th>
+                        <th scope="col">Condition</th>
+                        <th scope="col">Temp.</th>
+                        <th scope="col">Feels Like</th>
+                        <th scope="col">Precip</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Dew Point</th>
+                        <th scope="col">Humidity</th>
+                        <th scope="col">Wind</th>
+                        <th scope="col">Pressure</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="data : ${datas}">
+                        <th scope="row"><span th:text="${data.index}">0</span></th>
+                        <td><span th:text="${data.location}">$LOCATION</span></td>
+                        <td><span th:text="${data.time}">$TIME</span></td>
+                        <td><span th:text="${data.condition}">$CONDITION</span></td>
+                        <td><span th:text="${imperial? data.tempImperial : data.tempMetric}">36</span> &deg;<span th:text="${imperial ? 'F' : 'C'}">$SCALE</span></td>
+                        <td><span th:text="${imperial? data.feelsLikeImperial : data.feelsLikeMetric}">28</span> &deg;<span th:text="${imperial ? 'F' : 'C'}">$SCALE</span></td>
+                        <td><span th:text="${data.precipitation}">36</span>&#37;</td>
+                        <td><span th:text="${imperial ? data.amountImperial : data.amountMetric}">$AMOUNT</span> <span th:text="${imperial ? 'in' : 'mm'}"></span></td>
+                        <td><span th:text="${imperial? data.dewPointImperial : data.dewPointMetric}">$DEW_POINT</span> &deg;<span th:text="${imperial ? 'F' : 'C'}">$SCALE</span></td>
+                        <td><span th:text="${imperial? data.humidityImperial : data.humidityMetric}">$HUMIDITY</span> &deg;<span th:text="${imperial ? 'F' : 'C'}">$SCALE</span></td>
+                        <td><span th:text="${imperial? data.windImperial : data.windMetric}">$WIND</span></td>
+                        <td><span th:text="${imperial? data.pressureImperial : data.pressureMetric}">$PRESSURE</span> <span th:text="${imperial ? 'in' : 'mb'}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- /container -->
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="../static/js/bootstrap.bundle.min.js" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
+
+</body>
+</html>
